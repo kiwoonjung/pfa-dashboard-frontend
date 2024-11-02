@@ -1,58 +1,39 @@
 import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { AuthSplitLayout } from 'src/layouts/auth-split';
-
+import { AuthCenteredLayout } from 'src/layouts/auth-centered';
 import { SplashScreen } from 'src/components/loading-screen';
-
-import { GuestGuard } from 'src/auth/guard';
 
 // ----------------------------------------------------------------------
 
 /** **************************************
- * Jwt
+ * Centered layout
  *************************************** */
-const Jwt = {
-  SignInPage: lazy(() => import('src/pages/auth/jwt/sign-in')),
-  SignUpPage: lazy(() => import('src/pages/auth/jwt/sign-up')),
+
+const CenteredLayout = {
+  SignInPage: lazy(() => import('src/pages/auth-demo/centered/sign-in')),
+  // Additional pages can be added back here if needed
 };
 
-const authJwt = {
-  path: 'jwt',
-  children: [
-    {
-      path: 'sign-in',
-      element: (
-        <GuestGuard>
-          <AuthSplitLayout section={{ title: 'Hi, Welcome back' }}>
-            <Jwt.SignInPage />
-          </AuthSplitLayout>
-        </GuestGuard>
-      ),
-    },
-    {
-      path: 'sign-up',
-      element: (
-        <GuestGuard>
-          <AuthSplitLayout>
-            <Jwt.SignUpPage />
-          </AuthSplitLayout>
-        </GuestGuard>
-      ),
-    },
-  ],
+const authCentered = {
+  element: (
+    <AuthCenteredLayout>
+      <Outlet />
+    </AuthCenteredLayout>
+  ),
+  children: [{ path: 'sign-in', element: <CenteredLayout.SignInPage /> }],
 };
 
 // ----------------------------------------------------------------------
 
 export const authRoutes = [
   {
-    path: 'auth',
+    path: '/',
     element: (
       <Suspense fallback={<SplashScreen />}>
         <Outlet />
       </Suspense>
     ),
-    children: [authJwt],
+    children: [authCentered],
   },
 ];

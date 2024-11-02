@@ -12,7 +12,7 @@ import { ProgressBar } from 'src/components/progress-bar';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
-import { AuthProvider } from 'src/auth/context/jwt';
+// import { AuthProvider } from 'src/auth/context/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -20,16 +20,16 @@ export default function App() {
   useScrollToTop();
 
   return (
-    <AuthProvider>
-      <SettingsProvider settings={defaultSettings}>
-        <ThemeProvider>
-          <MotionLazy>
-            <ProgressBar />
-            <SettingsDrawer />
-            <Router />
-          </MotionLazy>
-        </ThemeProvider>
-      </SettingsProvider>
-    </AuthProvider>
+    // <AuthProvider>
+    <SettingsProvider settings={defaultSettings}>
+      <ThemeProvider>
+        <MotionLazy>
+          <ProgressBar />
+          <SettingsDrawer />
+          <Router />
+        </MotionLazy>
+      </ThemeProvider>
+    </SettingsProvider>
+    // </AuthProvider>
   );
 }
