@@ -39,7 +39,7 @@ export const paths = {
     //   updatePassword: `${ROOTS.AUTH}/supabase/update-password`,
     //   resetPassword: `${ROOTS.AUTH}/supabase/reset-password`,
     // },
-    microsoft: {
+    azure: {
       signIn: `/sign-in`,
     },
   },

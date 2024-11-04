@@ -11,7 +11,7 @@ export const CONFIG = {
   assetsDir: import.meta.env.VITE_ASSETS_DIR ?? '',
   /**
    * Auth
-   * @method azure | amplify | firebase | supabase | auth0
+   * @method azure
    */
   auth: {
     method: 'azure',

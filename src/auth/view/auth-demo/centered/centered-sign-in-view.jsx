@@ -1,10 +1,14 @@
+import { useContext } from 'react';
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMsal } from '@azure/msal-react';
+import { useMsal, useIsAuthenticated } from '@azure/msal-react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from 'src/auth/context/auth-context';
+import { loginRequest } from 'src/authConfig';
+import { callMsGraph } from 'src/graph';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -13,7 +17,6 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
-
 import { Iconify } from 'src/components/iconify';
 import { AnimateLogo2 } from 'src/components/animate';
 import { Form, Field } from 'src/components/hook-form';
@@ -21,8 +24,6 @@ import { Form, Field } from 'src/components/hook-form';
 import { FormHead } from '../../../components/form-head';
 import { FormSocials } from '../../../components/form-socials';
 import { FormDivider } from '../../../components/form-divider';
-
-import { loginRequest } from '../../../../../authConfig';
 
 // ----------------------------------------------------------------------
 
@@ -39,17 +40,67 @@ export const SignInSchema = zod.object({
 
 // ----------------------------------------------------------------------
 
-export function CenteredSignInView() {
-  const { instance } = useMsal();
+// const { instance, accounts } = useMsal();
+// const [graphData, setGraphData] = useState(null);
 
-  const handleLogin = () => {
-    instance.loginPopup(loginRequest).catch((error) => {
-      console.log(error);
-    });
+export function CenteredSignInView() {
+  const { instance, accounts } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
+  const navigate = useNavigate();
+  const { checkUserSession } = useContext(AuthContext);
+
+  const handleLogin = async () => {
+    try {
+      sessionStorage.removeItem('profileData');
+      const loginResponse = await instance.loginPopup(loginRequest);
+
+      // Set the active account after a successful login
+      instance.setActiveAccount(loginResponse.account);
+
+      await checkUserSession(); // Perform any session checks
+      await RequestProfileData(); // Request profile data only after login completes
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+
+  const RequestProfileData = async () => {
+    const activeAccount = instance.getActiveAccount();
+
+    if (!activeAccount) {
+      console.error('No active account available for acquiring token');
+      return;
+    }
+
+    try {
+      const tokenResponse = await instance.acquireTokenSilent({
+        ...loginRequest,
+        account: activeAccount,
+      });
+      const profileData = await callMsGraph(tokenResponse.accessToken);
+      console.log('profileData', profileData);
+
+      if (profileData) {
+        sessionStorage.setItem('profileData', JSON.stringify(profileData)); // Save to sessionStorage
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error('Error acquiring token silently:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await instance.logoutPopup({
+        postLogoutRedirectUri: '/',
+        mainWindowRedirectUri: '/',
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const password = useBoolean();
-
   const defaultValues = { email: '', password: '' };
 
   const methods = useForm({
@@ -75,39 +126,33 @@ export function CenteredSignInView() {
 
   const renderForm = (
     <Box gap={3} display="flex" flexDirection="column">
-      {/* <Field.Text name="email" label="Email address" InputLabelProps={{ shrink: true }} /> */}
-
-      {/* <Box gap={1.5} display="flex" flexDirection="column">
-        <Field.Text
-          name="password"
-          label="Password"
-          placeholder="6+ characters"
-          type={password.value ? 'text' : 'password'}
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={password.onToggle} edge="end">
-                  <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box> */}
-
-      <LoadingButton
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-        loadingIndicator="Sign in..."
-        onClick={handleLogin}
-      >
-        Sign in
-      </LoadingButton>
+      {isAuthenticated ? (
+        <LoadingButton
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+          loadingIndicator="Sign in..."
+          onClick={handleLogout}
+        >
+          Sign Out
+        </LoadingButton>
+      ) : (
+        <LoadingButton
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+          loadingIndicator="Sign in..."
+          onClick={handleLogin}
+        >
+          Sign in
+        </LoadingButton>
+      )}
     </Box>
   );
 
@@ -120,14 +165,14 @@ export function CenteredSignInView() {
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm}
       </Form>
-
+      {/* 
       <FormDivider />
 
       <FormSocials
         signInWithGoogle={() => {}}
         singInWithGithub={() => {}}
         signInWithTwitter={() => {}}
-      />
+      /> */}
     </>
   );
 }

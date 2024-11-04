@@ -12,12 +12,22 @@ import { _mock } from 'src/_mock';
 
 // ----------------------------------------------------------------------
 
+function trimEmail(email) {
+  // Split the email string by '#' and take the first part
+  const trimmed = email.split('#')[0];
+
+  // Replace the '_gmail.com' with '@gmail.com'
+  return trimmed.replace('_', '@');
+}
+
 export function useMockedUser() {
+  const savedProfileData = JSON.parse(sessionStorage.getItem('profileData'));
+  console.log('savedProfileData', savedProfileData);
   const user = {
     id: '8864c717-587d-472a-929a-8e5f298024da-0',
-    displayName: 'Jaydon Frankie',
-    email: 'demo@minimals.cc',
-    photoURL: _mock.image.avatar(24),
+    displayName: savedProfileData.profile.displayName,
+    email: trimEmail(savedProfileData.profile.userPrincipalName),
+    photoURL: savedProfileData.photo,
     phoneNumber: _mock.phoneNumber(1),
     country: _mock.countryNames(1),
     address: '90210 Broadway Blvd',
