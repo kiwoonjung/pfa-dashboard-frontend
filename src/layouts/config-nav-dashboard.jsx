@@ -52,11 +52,29 @@ export const navData = [
     ],
   },
   /**
-   * Management
+   * Department
    */
   {
-    subheader: 'Management',
+    subheader: 'Department',
     items: [
+      {
+        title: 'Warehouse',
+        path: paths.dashboard.warehouse.root,
+        icon: ICONS.job,
+        children: [
+          {
+            title: 'Kit',
+            path: '/warehouse/kit',
+            children: [
+              { title: 'Kit List', path: paths.dashboard.warehouse.kit_list },
+              { title: 'Create Kit', path: paths.dashboard.warehouse.create_kit },
+              { title: 'Disassemble Kit', path: paths.dashboard.warehouse.disassemble_kit },
+            ],
+          },
+          { title: 'Receiving', path: paths.dashboard.warehouse.receiving },
+          { title: 'Back Order', path: paths.dashboard.warehouse.back_order },
+        ],
+      },
       {
         title: 'Group',
         path: paths.dashboard.group.root,

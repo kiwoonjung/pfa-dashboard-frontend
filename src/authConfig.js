@@ -29,16 +29,16 @@ export const msalConfig = {
         }
         switch (level) {
           case LogLevel.Error:
-            console.error(message);
+            // console.error(message);
             break;
           case LogLevel.Info:
-            console.info(message);
+            // console.info(message);
             break;
           case LogLevel.Verbose:
-            console.debug(message);
+            // console.debug(message);
             break;
           case LogLevel.Warning:
-            console.warn(message);
+            // console.warn(message);
             break;
           default:
             break;

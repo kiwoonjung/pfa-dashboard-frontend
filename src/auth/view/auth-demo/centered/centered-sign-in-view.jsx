@@ -82,7 +82,7 @@ export function CenteredSignInView() {
 
       if (profileData) {
         sessionStorage.setItem('profileData', JSON.stringify(profileData)); // Save to sessionStorage
-        navigate('/dashboard');
+        navigate('/');
       }
     } catch (error) {
       console.error('Error acquiring token silently:', error);

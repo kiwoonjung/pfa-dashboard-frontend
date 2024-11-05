@@ -22,7 +22,6 @@ function trimEmail(email) {
 
 export function useMockedUser() {
   const savedProfileData = JSON.parse(sessionStorage.getItem('profileData'));
-  console.log('savedProfileData', savedProfileData);
   const user = {
     id: '8864c717-587d-472a-929a-8e5f298024da-0',
     displayName: savedProfileData.profile.displayName,

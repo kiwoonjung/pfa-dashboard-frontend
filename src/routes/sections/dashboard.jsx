@@ -16,6 +16,7 @@ const PageThree = lazy(() => import('src/pages/dashboard/three'));
 const PageFour = lazy(() => import('src/pages/dashboard/four'));
 const PageFive = lazy(() => import('src/pages/dashboard/five'));
 const PageSix = lazy(() => import('src/pages/dashboard/six'));
+const KitList = lazy(() => import('src/pages/warehouse/kit/list'));
 
 // ----------------------------------------------------------------------
 
@@ -29,12 +30,22 @@ const layoutContent = (
 
 export const dashboardRoutes = [
   {
-    path: 'dashboard',
+    path: '/',
     element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     children: [
       { element: <IndexPage />, index: true },
       { path: 'two', element: <PageTwo /> },
       { path: 'three', element: <PageThree /> },
+      {
+        path: 'Warehouse',
+        children: [
+          { path: 'kit/list', element: <KitList />, index: true },
+          { path: 'kit/create-kit', element: <KitList /> },
+          { path: 'kit/disassemble-kit', element: <KitList /> },
+          { path: 'receiving', element: <KitList /> },
+          { path: 'back-order', element: <KitList /> },
+        ],
+      },
       {
         path: 'group',
         children: [

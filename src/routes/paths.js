@@ -2,7 +2,8 @@
 
 const ROOTS = {
   AUTH: '/auth',
-  DASHBOARD: '/dashboard',
+  DASHBOARD: '/',
+  WAREHOUSE: '/warehouse',
 };
 
 // ----------------------------------------------------------------------
@@ -46,12 +47,20 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
-    two: `${ROOTS.DASHBOARD}/two`,
-    three: `${ROOTS.DASHBOARD}/three`,
+    two: `${ROOTS.DASHBOARD}two`,
+    three: `${ROOTS.DASHBOARD}three`,
+    warehouse: {
+      root: `${ROOTS.WAREHOUSE}`,
+      kit_list: `${ROOTS.WAREHOUSE}/kit/list`,
+      create_kit: `${ROOTS.WAREHOUSE}/kit/create-kit`,
+      disassemble_kit: `${ROOTS.WAREHOUSE}/kit/disassemble-kit`,
+      receiving: `${ROOTS.WAREHOUSE}/receiving`,
+      back_order: `${ROOTS.WAREHOUSE}/back-order`,
+    },
     group: {
-      root: `${ROOTS.DASHBOARD}/group`,
-      five: `${ROOTS.DASHBOARD}/group/five`,
-      six: `${ROOTS.DASHBOARD}/group/six`,
+      root: `${ROOTS.DASHBOARD}group`,
+      five: `${ROOTS.DASHBOARD}group/five`,
+      six: `${ROOTS.DASHBOARD}group/six`,
     },
   },
 };

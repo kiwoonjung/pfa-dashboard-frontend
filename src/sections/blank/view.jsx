@@ -10,7 +10,6 @@ export function BlankView({ title = 'Blank' }) {
   return (
     <DashboardContent maxWidth="xl">
       <Typography variant="h4"> {title} </Typography>
-
       <Box
         sx={{
           mt: 5,
