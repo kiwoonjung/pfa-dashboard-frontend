@@ -17,6 +17,7 @@ const PageFour = lazy(() => import('src/pages/dashboard/four'));
 const PageFive = lazy(() => import('src/pages/dashboard/five'));
 const PageSix = lazy(() => import('src/pages/dashboard/six'));
 const KitList = lazy(() => import('src/pages/warehouse/kit/list'));
+const CreateKit = lazy(() => import('src/pages/warehouse/kit/create-kit'));
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +41,7 @@ export const dashboardRoutes = [
         path: 'Warehouse',
         children: [
           { path: 'kit/list', element: <KitList />, index: true },
-          { path: 'kit/create-kit', element: <KitList /> },
+          { path: 'kit/create-kit', element: <CreateKit /> },
           { path: 'kit/disassemble-kit', element: <KitList /> },
           { path: 'receiving', element: <KitList /> },
           { path: 'back-order', element: <KitList /> },
